@@ -4,27 +4,26 @@ module string_type_mod
 
   private
 
-  public :: string
-
-  type :: string
+  type, public :: string
     private
     character(len=:), allocatable :: value
   contains
-    procedure, public  :: get_value
-    procedure, public  :: len      => len_string
-    procedure, public  :: len_trim => len_trim_string
-    procedure, public  :: trim     => trim_string
-    procedure, public  :: adjustl  => adjustl_string
-    procedure, public  :: adjustr  => adjustr_string
-    procedure, public  :: reverse  => resverse_string
-    procedure, public  :: to_lower => to_lower_string
-    procedure, public  :: to_upper => to_upper_string
-    procedure, public  :: to_int   => string_to_int
-    procedure, private :: assign_char
-    procedure, private :: assign_string
-    generic, public    :: assignment(=) => assign_char, assign_string
+    private
+    procedure, public, pass(this)  :: get_value
+    procedure, public, pass(this)  :: len      => len_string
+    procedure, public, pass(this)  :: len_trim => len_trim_string
+    procedure, public, pass(this)  :: trim     => trim_string
+    procedure, public, pass(this)  :: adjustl  => adjustl_string
+    procedure, public, pass(this)  :: adjustr  => adjustr_string
+    procedure, public, pass(this)  :: reverse  => resverse_string
+    procedure, public, pass(this)  :: to_lower => to_lower_string
+    procedure, public, pass(this)  :: to_upper => to_upper_string
+    procedure, public, pass(this)  :: to_int   => string_to_int
+    procedure, private, pass(this) :: assign_char
+    procedure, private, pass(this) :: assign_string
+    generic, public                :: assignment(=) => assign_char, assign_string
 #ifdef __GNUC__
-    procedure, public  :: delete => delete_string_polymorph
+    procedure, public, pass(this)  :: delete => delete_string_polymorph
 #endif
     final :: delete_string
   end type string
