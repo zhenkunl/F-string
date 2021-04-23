@@ -130,8 +130,7 @@ contains
     class(string), intent(in) :: self
     type(string)              :: trimmed_string
 
-    trimmed_string = self
-    trimmed_string%value = trim(self%value)
+    trimmed_string = trim(self%value)
 
   end function trim_string
 
@@ -141,8 +140,7 @@ contains
     class(string), intent(in) :: self
     type(string)              :: adjusted_string
 
-    adjusted_string = self
-    adjusted_string%value = adjustl(self%value)
+    adjusted_string = adjustl(self%value)
 
   end function adjustl_string
 
@@ -152,8 +150,7 @@ contains
     class(string), intent(in) :: self
     type(string)              :: adjusted_string
 
-    adjusted_string = self
-    adjusted_string%value = adjustr(self%value)
+    adjusted_string = adjustr(self%value)
 
   end function adjustr_string
 
