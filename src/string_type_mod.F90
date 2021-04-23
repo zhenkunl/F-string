@@ -20,16 +20,20 @@ module string_type_mod
     procedure, public, pass(self)  :: to_upper => to_upper_string
     procedure, public, pass(self)  :: to_int   => string_to_int
     procedure, public, pass(self)  :: capitalize
-    ! procedure, public, pass(self)  :: count
-    ! procedure, public, pass(self)  :: find
-    ! procedure, public, pass(self)  :: start_with
-    ! procedure, public, pass(self)  :: end_with
-    ! procedure, public, pass(self)  :: join
-    ! procedure, public, pass(self)  :: split
-    ! procedure, public, pass(self)  :: strip
-    procedure, private, pass(lhs)  :: assign_char
+    procedure, public, pass(self)  :: count
+    procedure, public, pass(self)  :: find
+    procedure, public, pass(self)  :: start_with
+    procedure, public, pass(self)  :: end_with
+    generic, public                :: join     => join_characters, join_strings
+    procedure, private, pass(self) :: join_characters
+    procedure, private, pass(self) :: join_strings
+    generic, public                :: operator(//) => string_concat_string, string_concat_character, character_concat_string
+    procedure, private, pass(lhs)  :: string_concat_string
+    procedure, private, pass(lhs)  :: string_concat_character
+    procedure, private, pass(rhs)  :: character_concat_string 
+    generic, public                :: assignment(=) => assign_character, assign_string
+    procedure, private, pass(lhs)  :: assign_character
     procedure, private, pass(lhs)  :: assign_string
-    generic, public                :: assignment(=) => assign_char, assign_string
 #ifdef __GNUC__
     procedure, public, pass(self)  :: delete => delete_string_polymorph
 #endif
@@ -171,11 +175,11 @@ contains
   function to_lower_string(self) result(lower_string)
 
     implicit none
-    class(string), intent(inout) :: self
-    type(string)                 :: lower_string
-    character(len=*), parameter  :: lower_alphabet = "abcdefghijklmnopqrstuvwxyz"
-    character(len=*), parameter  :: upper_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    integer                      :: i, j
+    class(string), intent(in)   :: self
+    type(string)                :: lower_string
+    character(len=*), parameter :: lower_alphabet = "abcdefghijklmnopqrstuvwxyz"
+    character(len=*), parameter :: upper_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    integer                     :: i, j
 
     lower_string = self
     do i = 1, self%len()
@@ -190,11 +194,11 @@ contains
 function to_upper_string(self) result(upper_string)
 
     implicit none
-    class(string), intent(inout) :: self
-    type(string)                 :: upper_string
-    character(len=*), parameter  :: lower_alphabet = "abcdefghijklmnopqrstuvwxyz"
-    character(len=*), parameter  :: upper_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    integer                      :: i, j
+    class(string), intent(in)   :: self
+    type(string)                :: upper_string
+    character(len=*), parameter :: lower_alphabet = "abcdefghijklmnopqrstuvwxyz"
+    character(len=*), parameter :: upper_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    integer                     :: i, j
 
     upper_string = self
     do i = 1, self%len()
@@ -209,11 +213,11 @@ function to_upper_string(self) result(upper_string)
   function capitalize(self) result(capitalized_string)
 
     implicit none
-    class(string), intent(inout) :: self
-    type(string)                 :: capitalized_string
-    character(len=*), parameter  :: lower_alphabet = "abcdefghijklmnopqrstuvwxyz"
-    character(len=*), parameter  :: upper_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    integer                      :: i
+    class(string), intent(in)   :: self
+    type(string)                :: capitalized_string
+    character(len=*), parameter :: lower_alphabet = "abcdefghijklmnopqrstuvwxyz"
+    character(len=*), parameter :: upper_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    integer                     :: i
 
     capitalized_string = self%to_lower()
     i = index(lower_alphabet, capitalized_string%value(1:1))
@@ -223,17 +227,172 @@ function to_upper_string(self) result(upper_string)
 
   end function capitalize
 
-  function string_to_int(self) result (int)
+  function count(self, substring) result(number)
 
     implicit none
-    class(string), intent(inout) :: self
-    integer                      :: int
+    class(string), intent(in) :: self
+    character(*), intent(in)  :: substring
+    integer                   :: number
+    integer                   :: start, idx
+
+    number = 0
+    if (len(substring) < self%len()) then
+      start = 1
+      do
+        idx = index(self%value(start:), substring)
+        if (idx == 0) then
+          exit
+        else
+          number = number + 1
+        end if
+        start = start + idx + len(substring) - 1
+      end do
+    end if
+
+  end function count
+
+  function find(self, substring, back) result(idx)
+
+    implicit none
+    class(string), intent(in)     :: self
+    character(*), intent(in)      :: substring
+    logical, intent(in), optional :: back
+    integer                       :: idx
+
+    if (len(substring) < self%len()) then
+      idx = index(self%value, substring, back)
+    else
+      idx = 0
+    end if
+
+  end function find
+
+  function start_with(self, prefix, start, end) result(res)
+
+    implicit none
+    class(string), intent(in)     :: self
+    character(*), intent(in)      :: prefix
+    integer, intent(in), optional :: start
+    integer, intent(in), optional :: end
+    logical                       :: res
+    integer                       :: start_, end_
+
+    if (present(start)) then
+      start_ = start
+    else
+      start_ = 1
+    end if
+
+    if (present(end)) then
+      end_ = end
+    else
+      end_ = self%len()
+    end if
+
+    res = index(self%value(start_:end_), prefix) == 1
+
+  end function start_with
+
+  function end_with(self, suffix, start, end) result(res)
+
+    implicit none
+    class(string), intent(in)     :: self
+    character(*), intent(in)      :: suffix
+    integer, intent(in), optional :: start
+    integer, intent(in), optional :: end
+    logical                       :: res
+    integer                       :: start_, end_
+
+    if (present(start)) then
+      start_ = start
+    else
+      start_ = 1
+    end if
+
+    if (present(end)) then
+      end_ = end
+    else
+      end_ = self%len()
+    end if
+
+    res = self%value(end_-len(suffix)+1:end_) == suffix
+
+  end function end_with
+
+  function join_characters(self, array) result(join)
+
+    implicit none
+    class(string), intent(in)    :: self
+    character(len=*), intent(in) :: array(:)
+    type(string)                 :: join
+    integer                      :: i
+
+    join = array(1)
+    do i = 2, size(array)
+      join%value = join%value//self%value//array(i)
+    end do
+
+  end function join_characters
+
+  function join_strings(self, array) result(join)
+
+    implicit none
+    class(string), intent(in) :: self
+    type(string), intent(in)  :: array(:)
+    type(string)              :: join
+    integer                   :: i
+
+    join = array(1)
+    do i = 2, size(array)
+      join%value = join%value//self%value//array(i)%value
+    end do
+
+  end function join_strings
+
+  function string_concat_string(lhs, rhs) result(concat)
+
+    implicit none
+    class(string), intent(in)     :: lhs
+    type(string),  intent(in)     :: rhs
+    character(len=:), allocatable :: concat
+
+    concat = lhs%value//rhs%value
+
+  end function string_concat_string
+
+  function string_concat_character(lhs, rhs) result(concat)
+
+    implicit none
+    class(string), intent(in)     :: lhs
+    character(len=*), intent(in)  :: rhs
+    character(len=:), allocatable :: concat
+
+    concat = lhs%value//rhs
+
+  end function string_concat_character
+
+  function character_concat_string(lhs, rhs) result(concat)
+
+    implicit none
+    character(len=*), intent(in)  :: lhs
+    class(string), intent(in)     :: rhs
+    character(len=:), allocatable :: concat
+
+    concat = lhs//rhs%value
+
+  end function character_concat_string
+
+  function string_to_int(self) result(int)
+
+    implicit none
+    class(string), intent(in) :: self
+    integer                   :: int
 
     read(self%value, *) int
 
   end function string_to_int
 
-  subroutine assign_char(lhs, rhs)
+  subroutine assign_character(lhs, rhs)
 
     implicit none
     class(string), intent(inout) :: lhs
@@ -241,7 +400,7 @@ function to_upper_string(self) result(upper_string)
 
     lhs%value = rhs
 
-  end subroutine assign_char
+  end subroutine assign_character
 
   subroutine assign_string(lhs, rhs)
 
