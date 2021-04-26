@@ -22,6 +22,18 @@ module string_type_mod
     procedure, private, pass(lhs)  :: string_concat_character
     procedure, private, pass(rhs)  :: character_concat_string
 
+    generic, public                :: operator(==) => string_eq_string, string_eq_character,                &
+                                      character_eq_string
+    procedure, private, pass(lhs)  :: string_eq_string
+    procedure, private, pass(lhs)  :: string_eq_character
+    procedure, private, pass(rhs)  :: character_eq_string
+
+    generic, public                :: operator(/=) => string_ne_string, string_ne_character,                &
+                                      character_ne_string
+    procedure, private, pass(lhs)  :: string_ne_string
+    procedure, private, pass(lhs)  :: string_ne_character
+    procedure, private, pass(rhs)  :: character_ne_string
+
     procedure, public, pass(self)  :: get_value
     procedure, public, pass(self)  :: len      => len_string
     procedure, public, pass(self)  :: len_trim => len_trim_string
@@ -167,6 +179,76 @@ contains
 
   end function character_concat_string
 !------ operator(//) procedures end
+
+!------ operator(==) procedures start
+  elemental function string_eq_string(lhs, rhs) result(equal)
+
+    implicit none
+    class(string), intent(in) :: lhs
+    type(string), intent(in)  :: rhs
+    logical                   :: equal
+
+    equal = lhs%value == rhs%value
+
+  end function string_eq_string
+
+  elemental function string_eq_character(lhs, rhs) result(equal)
+
+    implicit none
+    class(string), intent(in)    :: lhs
+    character(len=*), intent(in) :: rhs
+    logical                      :: equal
+
+    equal = lhs%value == rhs
+
+  end function string_eq_character
+
+  elemental function character_eq_string(lhs, rhs) result(equal)
+
+    implicit none
+    character(len=*), intent(in) :: lhs
+    class(string), intent(in)    :: rhs
+    logical                      :: equal
+
+    equal = lhs == rhs%value
+
+  end function character_eq_string
+!------ operator(==) procedures end
+
+!------ operator(/=) procedures start
+  elemental function string_ne_string(lhs, rhs) result(equal)
+
+    implicit none
+    class(string), intent(in) :: lhs
+    type(string), intent(in)  :: rhs
+    logical                   :: equal
+
+    equal = lhs%value /= rhs%value
+
+  end function string_ne_string
+
+  elemental function string_ne_character(lhs, rhs) result(equal)
+
+    implicit none
+    class(string), intent(in)    :: lhs
+    character(len=*), intent(in) :: rhs
+    logical                      :: equal
+
+    equal = lhs%value /= rhs
+
+  end function string_ne_character
+
+  elemental function character_ne_string(lhs, rhs) result(equal)
+
+    implicit none
+    character(len=*), intent(in) :: lhs
+    class(string), intent(in)    :: rhs
+    logical                      :: equal
+
+    equal = lhs /= rhs%value
+
+  end function character_ne_string
+!------ operator(/=) procedures end
 
   function get_value(self) result(string_value)
 

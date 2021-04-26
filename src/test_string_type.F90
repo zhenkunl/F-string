@@ -50,6 +50,12 @@ program test_string_type
   print*, str5%get_value(), str5%len(), str5%len_trim()
   characters = str1
   print*, characters
+  print*, str1 == str2, str1 /= str2
+  str2 = str1
+  print*, str1 == str2, str1 /= str2
+  print*, str3%get_value()
+  print*, str3 == "that Is ", str3 /= "that Is ", str3 /= " that Is "
+  print*, "that Is " == "that Is"
 #ifdef __GNUC__
   call str%delete()
 #endif
