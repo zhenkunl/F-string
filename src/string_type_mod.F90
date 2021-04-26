@@ -34,16 +34,17 @@ module string_type_mod
     procedure, private, pass(lhs)  :: string_ne_character
     procedure, private, pass(rhs)  :: character_ne_string
 
-    procedure, public, pass(self)  :: get_value
-    procedure, public, pass(self)  :: len      => len_string
-    procedure, public, pass(self)  :: len_trim => len_trim_string
-    procedure, public, pass(self)  :: trim     => trim_string
-    procedure, public, pass(self)  :: adjustl  => adjustl_string
-    procedure, public, pass(self)  :: adjustr  => adjustr_string
-    procedure, public, pass(self)  :: reverse  => resverse_string
-    procedure, public, pass(self)  :: to_lower => to_lower_string
-    procedure, public, pass(self)  :: to_upper => to_upper_string
-    procedure, public, pass(self)  :: to_int   => string_to_int
+    procedure, public, pass(self)  :: get_value => get_string_value
+    procedure, public, pass(self)  :: set_value => set_string_value
+    procedure, public, pass(self)  :: len       => len_string
+    procedure, public, pass(self)  :: len_trim  => len_trim_string
+    procedure, public, pass(self)  :: trim      => trim_string
+    procedure, public, pass(self)  :: adjustl   => adjustl_string
+    procedure, public, pass(self)  :: adjustr   => adjustr_string
+    procedure, public, pass(self)  :: reverse   => resverse_string
+    procedure, public, pass(self)  :: to_lower  => to_lower_string
+    procedure, public, pass(self)  :: to_upper  => to_upper_string
+    procedure, public, pass(self)  :: to_int    => string_to_int
     procedure, public, pass(self)  :: capitalize
     procedure, public, pass(self)  :: count
     procedure, public, pass(self)  :: find
@@ -250,7 +251,7 @@ contains
   end function character_ne_string
 !------ operator(/=) procedures end
 
-  function get_value(self) result(string_value)
+  function get_string_value(self) result(string_value)
 
     implicit none
     class(string), intent(in)     :: self
@@ -258,7 +259,17 @@ contains
 
     string_value = self%value
 
-  end function get_value
+  end function get_string_value
+
+  subroutine set_string_value(self, string_value)
+
+    implicit none
+    class(string), intent(inout) :: self
+    character(len=*), intent(in) :: string_value
+
+    self%value = trim(string_value)
+
+  end subroutine set_string_value
 
   function len_string(self) result(length)
 
@@ -366,7 +377,6 @@ function to_upper_string(self) result(upper_string)
     implicit none
     class(string), intent(in)   :: self
     type(string)                :: capitalized_string
-    integer                     :: i
 
     capitalized_string = self%to_lower()
     select case (capitalized_string%value(1:1))
