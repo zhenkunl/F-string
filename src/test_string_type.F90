@@ -6,6 +6,7 @@ program test_string_type
   type(string) :: str, str1, str2, str3, str4
   character(*), parameter :: chars(3) = ["123", "456", "789"]
   type(string) :: strs(3)
+  character(:), allocatable :: characters
 
   print*, '-', str%get_value(), '-', str%len(), str%len_trim()
   str = string("123 ")
@@ -42,6 +43,8 @@ program test_string_type
   str4 = str%join(strs)
   print*, str4%get_value(), str4%len(), str4%len_trim()
   print*, str3//"098", str1//str3, "098"//str3
+  characters = str1
+  print*, characters
 #ifdef __GNUC__
   call str%delete()
 #endif

@@ -9,6 +9,11 @@ module string_type_mod
     character(len=:), allocatable :: value
   contains
     private
+    generic, public                :: assignment(=) => assign_character_to_string, assign_string_to_character, &
+                                      assign_string_to_string
+    procedure, private, pass(lhs)  :: assign_character_to_string
+    procedure, private, pass(rhs)  :: assign_string_to_character
+    procedure, private, pass(lhs)  :: assign_string_to_string
     procedure, public, pass(self)  :: get_value
     procedure, public, pass(self)  :: len      => len_string
     procedure, public, pass(self)  :: len_trim => len_trim_string
@@ -30,10 +35,7 @@ module string_type_mod
     generic, public                :: operator(//) => string_concat_string, string_concat_character, character_concat_string
     procedure, private, pass(lhs)  :: string_concat_string
     procedure, private, pass(lhs)  :: string_concat_character
-    procedure, private, pass(rhs)  :: character_concat_string 
-    generic, public                :: assignment(=) => assign_character, assign_string
-    procedure, private, pass(lhs)  :: assign_character
-    procedure, private, pass(lhs)  :: assign_string
+    procedure, private, pass(rhs)  :: character_concat_string
 #ifdef __GNUC__
     procedure, public, pass(self)  :: delete => delete_string_polymorph
 #endif
@@ -93,6 +95,36 @@ contains
 
   end subroutine delete_string_polymorph
 #endif
+
+  subroutine assign_character_to_string(lhs, rhs)
+
+    implicit none
+    class(string), intent(inout) :: lhs
+    character(len=*), intent(in) :: rhs
+
+    lhs%value = rhs
+
+  end subroutine assign_character_to_string
+
+  subroutine assign_string_to_character(lhs, rhs)
+
+    implicit none
+    character(len=:), allocatable, intent(out) :: lhs
+    class(string), intent(in)                  :: rhs
+
+    lhs = rhs%value
+
+  end subroutine assign_string_to_character
+
+  subroutine assign_string_to_string(lhs, rhs)
+
+    implicit none
+    class(string), intent(inout) :: lhs
+    type(string), intent(in)     :: rhs
+
+    lhs%value = rhs%value
+
+  end subroutine assign_string_to_string
 
   function get_value(self) result(string_value)
 
@@ -388,25 +420,5 @@ function to_upper_string(self) result(upper_string)
     read(self%value, *) int
 
   end function string_to_int
-
-  subroutine assign_character(lhs, rhs)
-
-    implicit none
-    class(string), intent(inout) :: lhs
-    character(*), intent(in)     :: rhs
-
-    lhs%value = rhs
-
-  end subroutine assign_character
-
-  subroutine assign_string(lhs, rhs)
-
-    implicit none
-    class(string), intent(inout) :: lhs
-    type(string), intent(in)     :: rhs
-
-    lhs%value = rhs%value
-
-  end subroutine assign_string
 
 end module string_type_mod
