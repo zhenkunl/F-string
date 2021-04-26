@@ -330,16 +330,15 @@ contains
     implicit none
     class(string), intent(in)   :: self
     type(string)                :: lower_string
-    character(len=*), parameter :: lower_alphabet = "abcdefghijklmnopqrstuvwxyz"
-    character(len=*), parameter :: upper_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    integer                     :: i, j
+    integer                     :: i
 
     lower_string = self
     do i = 1, self%len()
-      j = index(upper_alphabet, lower_string%value(i:i))
-      if (j > 0) then
-        lower_string%value(i:i) = lower_alphabet(j:j)
-      end if
+      select case (lower_string%value(i:i))
+      case ('A':'Z')
+        lower_string%value(i:i) = char(iachar(lower_string%value(i:i))+32)
+      case default
+      end select
     end do
 
   end function to_lower_string
@@ -349,16 +348,15 @@ function to_upper_string(self) result(upper_string)
     implicit none
     class(string), intent(in)   :: self
     type(string)                :: upper_string
-    character(len=*), parameter :: lower_alphabet = "abcdefghijklmnopqrstuvwxyz"
-    character(len=*), parameter :: upper_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    integer                     :: i, j
+    integer                     :: i
 
     upper_string = self
     do i = 1, self%len()
-      j = index(lower_alphabet, upper_string%value(i:i))
-      if (j > 0) then
-        upper_string%value(i:i) = upper_alphabet(j:j)
-      end if
+      select case (upper_string%value(i:i))
+      case ('a':'z')
+        upper_string%value(i:i) = char(iachar(upper_string%value(i:i))-32)
+      case default
+      end select
     end do
 
   end function to_upper_string
@@ -368,15 +366,14 @@ function to_upper_string(self) result(upper_string)
     implicit none
     class(string), intent(in)   :: self
     type(string)                :: capitalized_string
-    character(len=*), parameter :: lower_alphabet = "abcdefghijklmnopqrstuvwxyz"
-    character(len=*), parameter :: upper_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     integer                     :: i
 
     capitalized_string = self%to_lower()
-    i = index(lower_alphabet, capitalized_string%value(1:1))
-    if (i > 0) then
-      capitalized_string%value(1:1) = upper_alphabet(i:i)
-    end if
+    select case (capitalized_string%value(1:1))
+    case ('a':'z')
+      capitalized_string%value(1:1) = char(iachar(capitalized_string%value(1:1))-32)
+    case default
+    end select
 
   end function capitalize
 
