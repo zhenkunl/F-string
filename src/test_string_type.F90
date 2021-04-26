@@ -3,7 +3,7 @@ program test_string_type
   use string_type_mod
   implicit none
 
-  type(string) :: str, str1, str2, str3, str4
+  type(string) :: str, str1, str2, str3, str4, str5
   character(*), parameter :: chars(3) = ["123", "456", "789"]
   type(string) :: strs(3)
   character(:), allocatable :: characters
@@ -42,7 +42,12 @@ program test_string_type
   strs(3) = str3
   str4 = str%join(strs)
   print*, str4%get_value(), str4%len(), str4%len_trim()
-  print*, str3//"098", str1//str3, "098"//str3
+  str5 = str3//"098"
+  print*, str5%get_value(), str5%len(), str5%len_trim()
+  str5 = str1//str3
+  print*, str5%get_value(), str5%len(), str5%len_trim()
+  str5 = "098"//str3
+  print*, str5%get_value(), str5%len(), str5%len_trim()
   characters = str1
   print*, characters
 #ifdef __GNUC__

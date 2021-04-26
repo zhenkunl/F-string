@@ -9,11 +9,19 @@ module string_type_mod
     character(len=:), allocatable :: value
   contains
     private
-    generic, public                :: assignment(=) => assign_character_to_string, assign_string_to_character, &
-                                      assign_string_to_string
+
+    generic, public                :: assignment(=) => assign_string_to_string, assign_character_to_string, &
+                                      assign_string_to_character
+    procedure, private, pass(lhs)  :: assign_string_to_string
     procedure, private, pass(lhs)  :: assign_character_to_string
     procedure, private, pass(rhs)  :: assign_string_to_character
-    procedure, private, pass(lhs)  :: assign_string_to_string
+
+    generic, public                :: operator(//) => string_concat_string, string_concat_character,        &
+                                      character_concat_string
+    procedure, private, pass(lhs)  :: string_concat_string
+    procedure, private, pass(lhs)  :: string_concat_character
+    procedure, private, pass(rhs)  :: character_concat_string
+
     procedure, public, pass(self)  :: get_value
     procedure, public, pass(self)  :: len      => len_string
     procedure, public, pass(self)  :: len_trim => len_trim_string
@@ -32,10 +40,7 @@ module string_type_mod
     generic, public                :: join     => join_characters, join_strings
     procedure, private, pass(self) :: join_characters
     procedure, private, pass(self) :: join_strings
-    generic, public                :: operator(//) => string_concat_string, string_concat_character, character_concat_string
-    procedure, private, pass(lhs)  :: string_concat_string
-    procedure, private, pass(lhs)  :: string_concat_character
-    procedure, private, pass(rhs)  :: character_concat_string
+
 #ifdef __GNUC__
     procedure, public, pass(self)  :: delete => delete_string_polymorph
 #endif
@@ -96,6 +101,17 @@ contains
   end subroutine delete_string_polymorph
 #endif
 
+!------ assignment(=) procedures start
+  subroutine assign_string_to_string(lhs, rhs)
+
+    implicit none
+    class(string), intent(inout) :: lhs
+    type(string), intent(in)     :: rhs
+
+    lhs%value = rhs%value
+
+  end subroutine assign_string_to_string
+
   subroutine assign_character_to_string(lhs, rhs)
 
     implicit none
@@ -115,16 +131,42 @@ contains
     lhs = rhs%value
 
   end subroutine assign_string_to_character
+!------ assignment(=) procedures end
 
-  subroutine assign_string_to_string(lhs, rhs)
+!------ operator(//) procedures start
+  function string_concat_string(lhs, rhs) result(concat)
 
     implicit none
-    class(string), intent(inout) :: lhs
-    type(string), intent(in)     :: rhs
+    class(string), intent(in) :: lhs
+    type(string), intent(in)  :: rhs
+    type(string)              :: concat
 
-    lhs%value = rhs%value
+    concat = lhs%value//rhs%value
 
-  end subroutine assign_string_to_string
+  end function string_concat_string
+
+  function string_concat_character(lhs, rhs) result(concat)
+
+    implicit none
+    class(string), intent(in)    :: lhs
+    character(len=*), intent(in) :: rhs
+    type(string)                 :: concat
+
+    concat = lhs%value//rhs
+
+  end function string_concat_character
+
+  function character_concat_string(lhs, rhs) result(concat)
+
+    implicit none
+    character(len=*), intent(in) :: lhs
+    class(string), intent(in)    :: rhs
+    type(string)                 :: concat
+
+    concat = lhs//rhs%value
+
+  end function character_concat_string
+!------ operator(//) procedures end
 
   function get_value(self) result(string_value)
 
@@ -377,39 +419,6 @@ function to_upper_string(self) result(upper_string)
     end do
 
   end function join_strings
-
-  function string_concat_string(lhs, rhs) result(concat)
-
-    implicit none
-    class(string), intent(in)     :: lhs
-    type(string),  intent(in)     :: rhs
-    character(len=:), allocatable :: concat
-
-    concat = lhs%value//rhs%value
-
-  end function string_concat_string
-
-  function string_concat_character(lhs, rhs) result(concat)
-
-    implicit none
-    class(string), intent(in)     :: lhs
-    character(len=*), intent(in)  :: rhs
-    character(len=:), allocatable :: concat
-
-    concat = lhs%value//rhs
-
-  end function string_concat_character
-
-  function character_concat_string(lhs, rhs) result(concat)
-
-    implicit none
-    character(len=*), intent(in)  :: lhs
-    class(string), intent(in)     :: rhs
-    character(len=:), allocatable :: concat
-
-    concat = lhs//rhs%value
-
-  end function character_concat_string
 
   function string_to_int(self) result(int)
 
