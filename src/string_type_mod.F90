@@ -74,9 +74,6 @@ module string_type_mod
     procedure, public, pass(self)  :: find
     procedure, public, pass(self)  :: start_with
     procedure, public, pass(self)  :: end_with
-    generic, public                :: join     => join_characters, join_strings
-    procedure, private, pass(self) :: join_characters
-    procedure, private, pass(self) :: join_strings
 
 #ifdef __GNUC__
     procedure, public, pass(self)  :: delete => delete_string_polymorph
@@ -642,36 +639,6 @@ function to_upper_string(self) result(upper_string)
     res = self%value(end_-len(suffix)+1:end_) == suffix
 
   end function end_with
-
-  function join_characters(self, array) result(join)
-
-    implicit none
-    class(string), intent(in)    :: self
-    character(len=*), intent(in) :: array(:)
-    type(string)                 :: join
-    integer                      :: i
-
-    join = array(1)
-    do i = 2, size(array)
-      join%value = join%value//self%value//array(i)
-    end do
-
-  end function join_characters
-
-  function join_strings(self, array) result(join)
-
-    implicit none
-    class(string), intent(in) :: self
-    type(string), intent(in)  :: array(:)
-    type(string)              :: join
-    integer                   :: i
-
-    join = array(1)
-    do i = 2, size(array)
-      join%value = join%value//self%value//array(i)%value
-    end do
-
-  end function join_strings
 
   function string_to_int(self) result(int)
 
