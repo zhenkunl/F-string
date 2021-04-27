@@ -34,6 +34,30 @@ module string_type_mod
     procedure, private, pass(lhs)  :: string_ne_character
     procedure, private, pass(rhs)  :: character_ne_string
 
+    generic, public                :: operator(>) => string_gt_string, string_gt_character,                 &
+                                      character_gt_string
+    procedure, private, pass(lhs)  :: string_gt_string
+    procedure, private, pass(lhs)  :: string_gt_character
+    procedure, private, pass(rhs)  :: character_gt_string
+
+    generic, public                :: operator(>=) => string_ge_string, string_ge_character,                &
+                                      character_ge_string
+    procedure, private, pass(lhs)  :: string_ge_string
+    procedure, private, pass(lhs)  :: string_ge_character
+    procedure, private, pass(rhs)  :: character_ge_string
+
+    generic, public                :: operator(<) => string_lt_string, string_lt_character,                 &
+                                      character_lt_string
+    procedure, private, pass(lhs)  :: string_lt_string
+    procedure, private, pass(lhs)  :: string_lt_character
+    procedure, private, pass(rhs)  :: character_lt_string
+
+    generic, public                :: operator(<=) => string_le_string, string_le_character,                &
+                                      character_le_string
+    procedure, private, pass(lhs)  :: string_le_string
+    procedure, private, pass(lhs)  :: string_le_character
+    procedure, private, pass(rhs)  :: character_le_string
+
     procedure, public, pass(self)  :: get_value => get_string_value
     procedure, public, pass(self)  :: set_value => set_string_value
     procedure, public, pass(self)  :: len       => len_string
@@ -182,7 +206,7 @@ contains
 !------ operator(//) procedures end
 
 !------ operator(==) procedures start
-  elemental function string_eq_string(lhs, rhs) result(equal)
+  function string_eq_string(lhs, rhs) result(equal)
 
     implicit none
     class(string), intent(in) :: lhs
@@ -193,7 +217,7 @@ contains
 
   end function string_eq_string
 
-  elemental function string_eq_character(lhs, rhs) result(equal)
+  function string_eq_character(lhs, rhs) result(equal)
 
     implicit none
     class(string), intent(in)    :: lhs
@@ -204,7 +228,7 @@ contains
 
   end function string_eq_character
 
-  elemental function character_eq_string(lhs, rhs) result(equal)
+  function character_eq_string(lhs, rhs) result(equal)
 
     implicit none
     character(len=*), intent(in) :: lhs
@@ -217,7 +241,7 @@ contains
 !------ operator(==) procedures end
 
 !------ operator(/=) procedures start
-  elemental function string_ne_string(lhs, rhs) result(equal)
+  function string_ne_string(lhs, rhs) result(equal)
 
     implicit none
     class(string), intent(in) :: lhs
@@ -228,7 +252,7 @@ contains
 
   end function string_ne_string
 
-  elemental function string_ne_character(lhs, rhs) result(equal)
+  function string_ne_character(lhs, rhs) result(equal)
 
     implicit none
     class(string), intent(in)    :: lhs
@@ -239,7 +263,7 @@ contains
 
   end function string_ne_character
 
-  elemental function character_ne_string(lhs, rhs) result(equal)
+  function character_ne_string(lhs, rhs) result(equal)
 
     implicit none
     character(len=*), intent(in) :: lhs
@@ -250,6 +274,146 @@ contains
 
   end function character_ne_string
 !------ operator(/=) procedures end
+
+!------ operator(>) procedures start
+  function string_gt_string(lhs, rhs) result(equal)
+
+    implicit none
+    class(string), intent(in) :: lhs
+    type(string), intent(in)  :: rhs
+    logical                   :: equal
+
+    equal = lhs%value > rhs%value
+
+  end function string_gt_string
+
+  function string_gt_character(lhs, rhs) result(equal)
+
+    implicit none
+    class(string), intent(in)    :: lhs
+    character(len=*), intent(in) :: rhs
+    logical                      :: equal
+
+    equal = lhs%value > rhs
+
+  end function string_gt_character
+
+  function character_gt_string(lhs, rhs) result(equal)
+
+    implicit none
+    character(len=*), intent(in) :: lhs
+    class(string), intent(in)    :: rhs
+    logical                      :: equal
+
+    equal = lhs > rhs%value
+
+  end function character_gt_string
+!------ operator(>) procedures end
+
+!------ operator(>=) procedures start
+  function string_ge_string(lhs, rhs) result(equal)
+
+    implicit none
+    class(string), intent(in) :: lhs
+    type(string), intent(in)  :: rhs
+    logical                   :: equal
+
+    equal = lhs%value >= rhs%value
+
+  end function string_ge_string
+
+  function string_ge_character(lhs, rhs) result(equal)
+
+    implicit none
+    class(string), intent(in)    :: lhs
+    character(len=*), intent(in) :: rhs
+    logical                      :: equal
+
+    equal = lhs%value >= rhs
+
+  end function string_ge_character
+
+  function character_ge_string(lhs, rhs) result(equal)
+
+    implicit none
+    character(len=*), intent(in) :: lhs
+    class(string), intent(in)    :: rhs
+    logical                      :: equal
+
+    equal = lhs >= rhs%value
+
+  end function character_ge_string
+!------ operator(>=) procedures end
+
+!------ operator(<) procedures start
+  function string_lt_string(lhs, rhs) result(equal)
+
+    implicit none
+    class(string), intent(in) :: lhs
+    type(string), intent(in)  :: rhs
+    logical                   :: equal
+
+    equal = lhs%value < rhs%value
+
+  end function string_lt_string
+
+  function string_lt_character(lhs, rhs) result(equal)
+
+    implicit none
+    class(string), intent(in)    :: lhs
+    character(len=*), intent(in) :: rhs
+    logical                      :: equal
+
+    equal = lhs%value < rhs
+
+  end function string_lt_character
+
+  function character_lt_string(lhs, rhs) result(equal)
+
+    implicit none
+    character(len=*), intent(in) :: lhs
+    class(string), intent(in)    :: rhs
+    logical                      :: equal
+
+    equal = lhs < rhs%value
+
+  end function character_lt_string
+!------ operator(<) procedures end
+
+!------ operator(<=) procedures start
+  function string_le_string(lhs, rhs) result(equal)
+
+    implicit none
+    class(string), intent(in) :: lhs
+    type(string), intent(in)  :: rhs
+    logical                   :: equal
+
+    equal = lhs%value <= rhs%value
+
+  end function string_le_string
+
+  function string_le_character(lhs, rhs) result(equal)
+
+    implicit none
+    class(string), intent(in)    :: lhs
+    character(len=*), intent(in) :: rhs
+    logical                      :: equal
+
+    equal = lhs%value <= rhs
+
+  end function string_le_character
+
+  function character_le_string(lhs, rhs) result(equal)
+
+    implicit none
+    character(len=*), intent(in) :: lhs
+    class(string), intent(in)    :: rhs
+    logical                      :: equal
+
+    equal = lhs <= rhs%value
+
+  end function character_le_string
+!------ operator(<=) procedures end
 
   function get_string_value(self) result(string_value)
 
