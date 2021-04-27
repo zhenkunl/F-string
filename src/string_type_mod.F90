@@ -70,7 +70,7 @@ module string_type_mod
     procedure, public, pass(self)  :: to_upper  => to_upper_string
     procedure, public, pass(self)  :: to_int    => string_to_int
     procedure, public, pass(self)  :: capitalize
-    procedure, public, pass(self)  :: count
+    procedure, public, pass(self)  :: count     => count_substring
     procedure, public, pass(self)  :: find
     procedure, public, pass(self)  :: start_with
     procedure, public, pass(self)  :: end_with
@@ -82,13 +82,13 @@ module string_type_mod
   end type string
 
   interface string
-    module procedure new_string_from_str
-    module procedure new_string_from_int
+    module procedure new_string_from_character
+    module procedure new_string_from_integer
   end interface string
 
 contains
 
-  function new_string_from_str(val) result(new)
+  function new_string_from_character(val) result(new)
 
     implicit none
     character(len=*), intent(in) :: val
@@ -96,9 +96,9 @@ contains
 
     new%value = val
 
-  end function new_string_from_str
+  end function new_string_from_character
 
-  function new_string_from_int(val) result(new)
+  function new_string_from_integer(val) result(new)
 
     implicit none
     integer, intent(in)       :: val
@@ -109,7 +109,7 @@ contains
     write(buffer, '(i0)') val
     new%value = trim(buffer)
 
-  end function new_string_from_int
+  end function new_string_from_integer
 
   subroutine delete_string(self)
 
@@ -548,7 +548,7 @@ function to_upper_string(self) result(upper_string)
 
   end function capitalize
 
-  function count(self, substring) result(number)
+  function count_substring(self, substring) result(number)
 
     implicit none
     class(string), intent(in) :: self
@@ -570,7 +570,7 @@ function to_upper_string(self) result(upper_string)
       end do
     end if
 
-  end function count
+  end function count_substring
 
   function find(self, substring, back) result(idx)
 
