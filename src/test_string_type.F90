@@ -11,6 +11,10 @@ program test_string_type
   print*, str1%get_value(), str1%len(), str1%len_trim()
   str1 = string(789)
   print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string(.true.)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string(3.2123456, 2, 5)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
   str1 = string(" 4567 ")
   print*, str1%get_value(), str1%len(), str1%len_trim()
   str1 = " 12 34 "

@@ -82,34 +82,51 @@ module string_type_mod
   end type string
 
   interface string
-    module procedure new_string_from_character
-    module procedure new_string_from_integer
+    module procedure new_string_from_value
   end interface string
 
 contains
 
-  function new_string_from_character(val) result(new)
+  function new_string_from_value(value, decimal_width, width) result(new)
 
     implicit none
-    character(len=*), intent(in) :: val
-    type(string)                 :: new
+    class(*), intent(in)          :: value
+    integer, intent(in), optional :: decimal_width
+    integer, intent(in), optional :: width
+    type(string)                  :: new
 
-    new%value = val
+    select type(value)
+    type is (integer)
+      block
+        character(len=range(value)+2) :: buffer
+        write(buffer, '(i0)') value
+        new%value = trim(buffer)
+      end block
+    type is (real)
+      if (present(decimal_width)) then
+        block
+          character(len=range(value)+2) :: buffer
+          character(len=5)              :: fmt
+          integer                       :: total_width
+          if (present(width)) then
+            total_width = max(width, decimal_width + 1 + 6)
+          else
+            total_width = decimal_width + 1 + 6
+          end if
+          write(fmt, '(a1, i0, a1, i0)') 'G', total_width, '.', decimal_width+1
+          print*, 'fmt = ', fmt
+          write(buffer, '('//fmt//')') value
+          new%value = trim(adjustl(buffer))
+        end block
+      end if
+    type is (logical)
+      new%value = trim(merge('true ', 'false', value))
+    type is (character(*))
+      new%value = value
+    class default
+    end select
 
-  end function new_string_from_character
-
-  function new_string_from_integer(val) result(new)
-
-    implicit none
-    integer, intent(in)       :: val
-    type(string)              :: new
-    integer, parameter        :: buffer_len = range(val)+2
-    character(len=buffer_len) :: buffer
-
-    write(buffer, '(i0)') val
-    new%value = trim(buffer)
-
-  end function new_string_from_integer
+  end function new_string_from_value
 
   subroutine delete_string(self)
 
