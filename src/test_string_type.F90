@@ -13,7 +13,53 @@ program test_string_type
   print*, str1%get_value(), str1%len(), str1%len_trim()
   str1 = string(.true.)
   print*, str1%get_value(), str1%len(), str1%len_trim()
-  str1 = string(3.2123456, 2, 5)
+  str1 = string(0.0123456789, 3)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, str1 == "0.123E-01"
+  str1 = string(-0.0123456789, 3)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, str1 == "-0.123E-01"
+  str1 = string(0.123456789, 3)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, str1 == "0.123"
+  str1 = string(-0.123456789, 3)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, str1 == "-0.123"
+  str1 = string(1.23456789, 3)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, str1 == "1.23"
+  str1 = string(-1.23456789, 3)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, str1 == "-1.23"
+  str1 = string(12.3456789, 3)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, str1 == "12.3"
+  str1 = string(-12.3456789, 3)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, str1 == "-12.3"
+  str1 = string(123.456789, 3)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, str1 == "123."
+  str1 = string(-123.456789, 3)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, str1 == "-123."
+  str1 = string(1234.56789, 3)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, str1 == "0.123E+04"
+  str1 = string(-1234.56789, 3)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, str1 == "-0.123E+04"
+  str1 = string(0.0123456789)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string(0.123456789)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string(123.456789)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string(0.01234)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string(0.1234)
+  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string(123.4)
   print*, str1%get_value(), str1%len(), str1%len_trim()
   str1 = string(" 4567 ")
   print*, str1%get_value(), str1%len(), str1%len_trim()

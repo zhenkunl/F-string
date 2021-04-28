@@ -109,13 +109,18 @@ contains
           character(len=5)              :: fmt
           integer                       :: total_width
           if (present(width)) then
-            total_width = max(width, decimal_width + 1 + 6)
+            total_width = max(width, decimal_width + 7)
           else
-            total_width = decimal_width + 1 + 6
+            total_width = decimal_width + 7
           end if
-          write(fmt, '(a1, i0, a1, i0)') 'G', total_width, '.', decimal_width+1
-          print*, 'fmt = ', fmt
+          write(fmt, '(a1, i0, a1, i0)') 'G', total_width, '.', decimal_width
           write(buffer, '('//fmt//')') value
+          new%value = trim(adjustl(buffer))
+        end block
+      else
+        block
+          character(len=range(value)+2) :: buffer
+          write(buffer, *) value
           new%value = trim(adjustl(buffer))
         end block
       end if
