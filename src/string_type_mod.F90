@@ -548,7 +548,7 @@ function to_upper_string(self) result(upper_string)
     do i = 1, self%len()
       select case (upper_string%value(i:i))
       case ('a':'z')
-        upper_string%value(i:i) = char(iachar(upper_string%value(i:i))-32)
+        upper_string%value(i:i) = achar(iachar(upper_string%value(i:i))-32)
       case default
       end select
     end do
@@ -564,7 +564,7 @@ function to_upper_string(self) result(upper_string)
     capitalized_string = self%to_lower()
     select case (capitalized_string%value(1:1))
     case ('a':'z')
-      capitalized_string%value(1:1) = char(iachar(capitalized_string%value(1:1))-32)
+      capitalized_string%value(1:1) = achar(iachar(capitalized_string%value(1:1))-32)
     case default
     end select
 
