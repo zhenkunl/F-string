@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(F-string LANGUAGES Fortran)
+project(Fortran_String LANGUAGES Fortran)
 
 if (CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffree-line-length-none")
@@ -16,8 +16,8 @@ include_directories(${CMAKE_BINARY_DIR})
 
 set(sources
   src/string_type_mod.F90
-  src/test_string_type.F90
+  test/test_string_type.F90
 )
 
-add_library(F-string SHARED ${sources})
+add_library(Fortran_String SHARED ${sources})
 add_executable(test_string.exe ${sources})
