@@ -1,15 +1,14 @@
 module string_type_mod
 
   implicit none
-
   private
+  public :: string
 
-  type, public :: string
+  type :: string
     private
-    character(len=:), allocatable :: value
+    character(len=:), allocatable  :: value
   contains
     private
-
     generic, public                :: assignment(=) => assign_string_to_string, assign_character_to_string, &
                                       assign_string_to_character
     procedure, private, pass(lhs)  :: assign_string_to_string
@@ -75,19 +74,16 @@ module string_type_mod
     procedure, public, pass(self)  :: start_with
     procedure, public, pass(self)  :: end_with
 
-#ifdef __GNUC__
-    procedure, public, pass(self)  :: delete => delete_string_polymorph
-#endif
-    final :: delete_string
+    final                          :: string_finalize
   end type string
 
   interface string
-    module procedure new_string_from_value
+    module procedure constructor
   end interface string
 
 contains
 
-  function new_string_from_value(value, decimal_width, width) result(new)
+  function constructor(value, decimal_width, width) result(new)
 
     implicit none
     class(*), intent(in)          :: value
@@ -131,9 +127,9 @@ contains
     class default
     end select
 
-  end function new_string_from_value
+  end function constructor
 
-  subroutine delete_string(self)
+  subroutine string_finalize(self)
 
     implicit none
     type(string), intent(inout) :: self
@@ -142,20 +138,7 @@ contains
       deallocate(self%value)
     end if
 
-  end subroutine delete_string
-
-#ifdef __GNUC__
-  subroutine delete_string_polymorph(self)
-
-    implicit none
-    class(string), intent(inout) :: self
-
-    if (allocated(self%value)) then
-      deallocate(self%value)
-    end if
-
-  end subroutine delete_string_polymorph
-#endif
+  end subroutine string_finalize
 
 !------ assignment(=) procedures start
   subroutine assign_string_to_string(lhs, rhs)

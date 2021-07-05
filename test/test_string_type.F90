@@ -99,10 +99,4 @@ program test_string_type
   print*, str3 == "789", "789" == str3, str3 /= "789", "789" /= str3
   print*, str3 > "789", "789" > str3, str3 > "788", "788" > str3, str3 >= "789", "789" >= str3
   print*, str3 < "789", "789" < str3, str3 < "790", "790" > str3, str3 <= "789", "789" >= str3
-#ifdef __GNUC__
-  call str1%delete()
-  call str2%delete()
-  call str3%delete()
-  call str4%delete()
-#endif
 end program test_string_type
