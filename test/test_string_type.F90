@@ -1,81 +1,91 @@
 program test_string_type
 
+  use iso_fortran_env, only : int8, int16, int32, int64, real32, real64
   use string_type_mod
   implicit none
 
-  type(string) :: str1, str2, str3, str4
+  type(string_t) :: str1, str2, str3, str4
   character(:), allocatable :: characters
+  integer :: i32
+  real(real32) :: r32
+  real(real64) :: r64
 
-  print*, '-', str1%get_value(), '-', str1%len(), str1%len_trim()
-  str1 = string("123 ")
-  print*, str1%get_value(), str1%len(), str1%len_trim()
-  str1 = string(789)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
-  str1 = string(.true.)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
-  str1 = string(0.0123456789, 3)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  print*, '-', str1%value(), '-', str1%len(), str1%len_trim()
+  str1 = string_t("123 ")
+  print*, str1%value(), str1%len(), str1%len_trim()
+  i32 = 789
+  str1 = string_t(i32)
+  print*, str1%value(), str1%len(), str1%len_trim()
+  str1 = string_t(.true.)
+  print*, str1%value(), str1%len(), str1%len_trim()
+  str1 = string_t(0.0123456789, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
   print*, str1 == "0.123E-01"
-  str1 = string(-0.0123456789, 3)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string_t(-0.0123456789, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
   print*, str1 == "-0.123E-01"
-  str1 = string(0.123456789, 3)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string_t(0.123456789, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
   print*, str1 == "0.123"
-  str1 = string(-0.123456789, 3)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string_t(-0.123456789, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
   print*, str1 == "-0.123"
-  str1 = string(1.23456789, 3)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string_t(1.23456789, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
   print*, str1 == "1.23"
-  str1 = string(-1.23456789, 3)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string_t(-1.23456789, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
   print*, str1 == "-1.23"
-  str1 = string(12.3456789, 3)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string_t(12.3456789, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
   print*, str1 == "12.3"
-  str1 = string(-12.3456789, 3)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string_t(-12.3456789, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
   print*, str1 == "-12.3"
-  str1 = string(123.456789, 3)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string_t(123.456789, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
   print*, str1 == "123."
-  str1 = string(-123.456789, 3)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string_t(-123.456789, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
   print*, str1 == "-123."
-  str1 = string(1234.56789, 3)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string_t(1234.56789, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
   print*, str1 == "0.123E+04"
-  str1 = string(-1234.56789, 3)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string_t(-1234.56789, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
   print*, str1 == "-0.123E+04"
-  str1 = string(0.0123456789)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
-  str1 = string(0.123456789)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
-  str1 = string(123.456789)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
-  str1 = string(0.01234)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
-  str1 = string(0.1234)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
-  str1 = string(123.4)
-  print*, str1%get_value(), str1%len(), str1%len_trim()
-  str1 = string(" 4567 ")
-  print*, str1%get_value(), str1%len(), str1%len_trim()
+  str1 = string_t(0.0123456789)
+  print*, str1%value(), str1%len(), str1%len_trim()
+  str1 = string_t(0.123456789)
+  print*, str1%value(), str1%len(), str1%len_trim()
+  str1 = string_t(123.456789)
+  print*, str1%value(), str1%len(), str1%len_trim()
+  str1 = string_t(0.01234)
+  print*, str1%value(), str1%len(), str1%len_trim()
+  str1 = string_t(0.1234)
+  print*, str1%value(), str1%len(), str1%len_trim()
+  str1 = string_t(123.4)
+  print*, str1%value(), str1%len(), str1%len_trim()
+  r32 = 123.456789
+  str1 = string_t(r32, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
+  r64 = 123.456789
+  str1 = string_t(r64, 3)
+  print*, str1%value(), str1%len(), str1%len_trim()
+  str1 = string_t(" 4567 ")
+  print*, str1%value(), str1%len(), str1%len_trim()
   str1 = " 12 34 "
-  print*, str1%to_int()
   str2 = str1%reverse()
-  print*, str2%get_value(), str2%len(), str2%len_trim()
-  str1 = string("that Is ")
+  print*, str2%value(), str2%len(), str2%len_trim()
+  str1 = string_t("that Is ")
   str2 = str1%to_lower()
-  print*, str2%get_value(), str2%len(), str2%len_trim()
+  print*, str2%value(), str2%len(), str2%len_trim()
   str2 = str1%to_upper()
-  print*, str2%get_value(), str2%len(), str2%len_trim()
+  print*, str2%value(), str2%len(), str2%len_trim()
   str2 = str1%capitalize()
-  print*, str2%get_value(), str2%len(), str2%len_trim()
+  print*, str2%value(), str2%len(), str2%len_trim()
   str2 = str1%trim()
-  print*, str2%get_value(), str2%len(), str2%len_trim()
+  print*, str2%value(), str2%len(), str2%len_trim()
   str1 = " 0123456123456 123456123456 "
   print*, str1%count(" "), str1%count("123"), str1%count("61")
   print*, str1%find("34"), str1%find("56", .true.)
@@ -86,11 +96,11 @@ program test_string_type
   str2 = "456"
   str3 = "789"
   str4 = str3//"098"
-  print*, str4%get_value(), str4%len(), str4%len_trim()
+  print*, str4%value(), str4%len(), str4%len_trim()
   str4 = str1//str3
-  print*, str4%get_value(), str4%len(), str4%len_trim()
+  print*, str4%value(), str4%len(), str4%len_trim()
   str4 = "098"//str3
-  print*, str4%get_value(), str4%len(), str4%len_trim()
+  print*, str4%value(), str4%len(), str4%len_trim()
   characters = str1
   print*, characters
   print*, str1 == str2, str1 /= str2
