@@ -6,7 +6,7 @@ program test_string_type
 
   type(string_t) :: str1, str2, str3, str4
   character(:), allocatable :: characters
-  integer :: i32
+  integer(i4) :: i32
   real(r4) :: r32
   real(r8) :: r64
 
