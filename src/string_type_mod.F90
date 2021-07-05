@@ -91,7 +91,7 @@ module string_type_mod
 contains
 
 !------ constructor procedures start
-  function constructor_from_int8(value) result(new)
+  pure function constructor_from_int8(value) result(new)
 
     implicit none
     integer(i1), intent(in)       :: value
@@ -103,7 +103,7 @@ contains
 
   end function constructor_from_int8
 
-  function constructor_from_int16(value) result(new)
+  pure function constructor_from_int16(value) result(new)
 
     implicit none
     integer(i2), intent(in)       :: value
@@ -115,7 +115,7 @@ contains
 
   end function constructor_from_int16
 
-  function constructor_from_int32(value) result(new)
+  pure function constructor_from_int32(value) result(new)
 
     implicit none
     integer(i4), intent(in)       :: value
@@ -127,7 +127,7 @@ contains
 
   end function constructor_from_int32
 
-  function constructor_from_int64(value) result(new)
+  pure function constructor_from_int64(value) result(new)
 
     implicit none
     integer(i8), intent(in)       :: value
@@ -139,7 +139,7 @@ contains
 
   end function constructor_from_int64
 
-  function constructor_from_real32(value, decimal_width, width) result(new)
+  pure function constructor_from_real32(value, decimal_width, width) result(new)
 
     implicit none
     real(r4), intent(in)          :: value
@@ -166,7 +166,7 @@ contains
 
   end function constructor_from_real32
 
-  function constructor_from_real64(value, decimal_width, width) result(new)
+  pure function constructor_from_real64(value, decimal_width, width) result(new)
 
     implicit none
     real(r8), intent(in)          :: value
@@ -193,7 +193,7 @@ contains
 
   end function constructor_from_real64
 
-  function constructor_from_logical(value) result(new)
+  pure function constructor_from_logical(value) result(new)
 
     implicit none
     logical, intent(in) :: value
@@ -207,7 +207,7 @@ contains
 
   end function constructor_from_logical
 
-  function constructor_from_character(value) result(new)
+  pure function constructor_from_character(value) result(new)
 
     implicit none
     character(len=*), intent(in) :: value
@@ -218,7 +218,7 @@ contains
   end function constructor_from_character
 !------ constructor procedures end
 
-  subroutine string_finalize(self)
+  pure subroutine string_finalize(self)
 
     implicit none
     type(string_t), intent(inout) :: self
@@ -230,7 +230,7 @@ contains
   end subroutine string_finalize
 
 !------ assignment(=) procedures start
-  subroutine assign_string_to_string(lhs, rhs)
+  pure subroutine assign_string_to_string(lhs, rhs)
 
     implicit none
     class(string_t), intent(inout) :: lhs
@@ -240,7 +240,7 @@ contains
 
   end subroutine assign_string_to_string
 
-  subroutine assign_character_to_string(lhs, rhs)
+  pure subroutine assign_character_to_string(lhs, rhs)
 
     implicit none
     class(string_t), intent(inout) :: lhs
@@ -250,7 +250,7 @@ contains
 
   end subroutine assign_character_to_string
 
-  subroutine assign_string_to_character(lhs, rhs)
+  pure subroutine assign_string_to_character(lhs, rhs)
 
     implicit none
     character(len=:), allocatable, intent(out) :: lhs
@@ -262,7 +262,7 @@ contains
 !------ assignment(=) procedures end
 
 !------ operator(//) procedures start
-  function string_concat_string(lhs, rhs) result(concat_string)
+  pure function string_concat_string(lhs, rhs) result(concat_string)
 
     implicit none
     class(string_t), intent(in) :: lhs
@@ -273,7 +273,7 @@ contains
 
   end function string_concat_string
 
-  function string_concat_character(lhs, rhs) result(concat_string)
+  pure function string_concat_character(lhs, rhs) result(concat_string)
 
     implicit none
     class(string_t), intent(in)  :: lhs
@@ -284,7 +284,7 @@ contains
 
   end function string_concat_character
 
-  function character_concat_string(lhs, rhs) result(concat_string)
+  pure function character_concat_string(lhs, rhs) result(concat_string)
 
     implicit none
     character(len=*), intent(in) :: lhs
@@ -297,216 +297,216 @@ contains
 !------ operator(//) procedures end
 
 !------ operator(==) procedures start
-  function string_eq_string(lhs, rhs) result(equal)
+  pure function string_eq_string(lhs, rhs) result(equals)
 
     implicit none
     class(string_t), intent(in) :: lhs
     type(string_t), intent(in)  :: rhs
-    logical                     :: equal
+    logical                     :: equals
 
-    equal = lhs%value_ == rhs%value_
+    equals = lhs%value_ == rhs%value_
 
   end function string_eq_string
 
-  function string_eq_character(lhs, rhs) result(equal)
+  pure function string_eq_character(lhs, rhs) result(equals)
 
     implicit none
     class(string_t), intent(in)  :: lhs
     character(len=*), intent(in) :: rhs
-    logical                      :: equal
+    logical                      :: equals
 
-    equal = lhs%value_ == rhs
+    equals = lhs%value_ == rhs
 
   end function string_eq_character
 
-  function character_eq_string(lhs, rhs) result(equal)
+  pure function character_eq_string(lhs, rhs) result(equals)
 
     implicit none
     character(len=*), intent(in) :: lhs
     class(string_t), intent(in)  :: rhs
-    logical                      :: equal
+    logical                      :: equals
 
-    equal = lhs == rhs%value_
+    equals = lhs == rhs%value_
 
   end function character_eq_string
 !------ operator(==) procedures end
 
 !------ operator(/=) procedures start
-  function string_ne_string(lhs, rhs) result(equal)
+  pure function string_ne_string(lhs, rhs) result(equals)
 
     implicit none
     class(string_t), intent(in) :: lhs
     type(string_t), intent(in)  :: rhs
-    logical                     :: equal
+    logical                     :: equals
 
-    equal = lhs%value_ /= rhs%value_
+    equals = lhs%value_ /= rhs%value_
 
   end function string_ne_string
 
-  function string_ne_character(lhs, rhs) result(equal)
+  pure function string_ne_character(lhs, rhs) result(equals)
 
     implicit none
     class(string_t), intent(in)  :: lhs
     character(len=*), intent(in) :: rhs
-    logical                      :: equal
+    logical                      :: equals
 
-    equal = lhs%value_ /= rhs
+    equals = lhs%value_ /= rhs
 
   end function string_ne_character
 
-  function character_ne_string(lhs, rhs) result(equal)
+  pure function character_ne_string(lhs, rhs) result(equals)
 
     implicit none
     character(len=*), intent(in) :: lhs
     class(string_t), intent(in)  :: rhs
-    logical                      :: equal
+    logical                      :: equals
 
-    equal = lhs /= rhs%value_
+    equals = lhs /= rhs%value_
 
   end function character_ne_string
 !------ operator(/=) procedures end
 
 !------ operator(>) procedures start
-  function string_gt_string(lhs, rhs) result(equal)
+  pure function string_gt_string(lhs, rhs) result(equals)
 
     implicit none
     class(string_t), intent(in) :: lhs
     type(string_t), intent(in)  :: rhs
-    logical                     :: equal
+    logical                     :: equals
 
-    equal = lhs%value_ > rhs%value_
+    equals = lhs%value_ > rhs%value_
 
   end function string_gt_string
 
-  function string_gt_character(lhs, rhs) result(equal)
+  pure function string_gt_character(lhs, rhs) result(equals)
 
     implicit none
     class(string_t), intent(in)  :: lhs
     character(len=*), intent(in) :: rhs
-    logical                      :: equal
+    logical                      :: equals
 
-    equal = lhs%value_ > rhs
+    equals = lhs%value_ > rhs
 
   end function string_gt_character
 
-  function character_gt_string(lhs, rhs) result(equal)
+  pure function character_gt_string(lhs, rhs) result(equals)
 
     implicit none
     character(len=*), intent(in) :: lhs
     class(string_t), intent(in)  :: rhs
-    logical                      :: equal
+    logical                      :: equals
 
-    equal = lhs > rhs%value_
+    equals = lhs > rhs%value_
 
   end function character_gt_string
 !------ operator(>) procedures end
 
 !------ operator(>=) procedures start
-  function string_ge_string(lhs, rhs) result(equal)
+  pure function string_ge_string(lhs, rhs) result(equals)
 
     implicit none
     class(string_t), intent(in) :: lhs
     type(string_t), intent(in)  :: rhs
-    logical                     :: equal
+    logical                     :: equals
 
-    equal = lhs%value_ >= rhs%value_
+    equals = lhs%value_ >= rhs%value_
 
   end function string_ge_string
 
-  function string_ge_character(lhs, rhs) result(equal)
+  pure function string_ge_character(lhs, rhs) result(equals)
 
     implicit none
     class(string_t), intent(in)  :: lhs
     character(len=*), intent(in) :: rhs
-    logical                      :: equal
+    logical                      :: equals
 
-    equal = lhs%value_ >= rhs
+    equals = lhs%value_ >= rhs
 
   end function string_ge_character
 
-  function character_ge_string(lhs, rhs) result(equal)
+  pure function character_ge_string(lhs, rhs) result(equals)
 
     implicit none
     character(len=*), intent(in) :: lhs
     class(string_t), intent(in)  :: rhs
-    logical                      :: equal
+    logical                      :: equals
 
-    equal = lhs >= rhs%value_
+    equals = lhs >= rhs%value_
 
   end function character_ge_string
 !------ operator(>=) procedures end
 
 !------ operator(<) procedures start
-  function string_lt_string(lhs, rhs) result(equal)
+  pure function string_lt_string(lhs, rhs) result(equals)
 
     implicit none
     class(string_t), intent(in) :: lhs
     type(string_t), intent(in)  :: rhs
-    logical                     :: equal
+    logical                     :: equals
 
-    equal = lhs%value_ < rhs%value_
+    equals = lhs%value_ < rhs%value_
 
   end function string_lt_string
 
-  function string_lt_character(lhs, rhs) result(equal)
+  pure function string_lt_character(lhs, rhs) result(equals)
 
     implicit none
     class(string_t), intent(in)  :: lhs
     character(len=*), intent(in) :: rhs
-    logical                      :: equal
+    logical                      :: equals
 
-    equal = lhs%value_ < rhs
+    equals = lhs%value_ < rhs
 
   end function string_lt_character
 
-  function character_lt_string(lhs, rhs) result(equal)
+  pure function character_lt_string(lhs, rhs) result(equals)
 
     implicit none
     character(len=*), intent(in) :: lhs
     class(string_t), intent(in)  :: rhs
-    logical                      :: equal
+    logical                      :: equals
 
-    equal = lhs < rhs%value_
+    equals = lhs < rhs%value_
 
   end function character_lt_string
 !------ operator(<) procedures end
 
 !------ operator(<=) procedures start
-  function string_le_string(lhs, rhs) result(equal)
+  pure function string_le_string(lhs, rhs) result(equals)
 
     implicit none
     class(string_t), intent(in) :: lhs
     type(string_t), intent(in)  :: rhs
-    logical                     :: equal
+    logical                     :: equals
 
-    equal = lhs%value_ <= rhs%value_
+    equals = lhs%value_ <= rhs%value_
 
   end function string_le_string
 
-  function string_le_character(lhs, rhs) result(equal)
+  pure function string_le_character(lhs, rhs) result(equals)
 
     implicit none
     class(string_t), intent(in)  :: lhs
     character(len=*), intent(in) :: rhs
-    logical                      :: equal
+    logical                      :: equals
 
-    equal = lhs%value_ <= rhs
+    equals = lhs%value_ <= rhs
 
   end function string_le_character
 
-  function character_le_string(lhs, rhs) result(equal)
+  pure function character_le_string(lhs, rhs) result(equals)
 
     implicit none
     character(len=*), intent(in) :: lhs
     class(string_t), intent(in)  :: rhs
-    logical                      :: equal
+    logical                      :: equals
 
-    equal = lhs <= rhs%value_
+    equals = lhs <= rhs%value_
 
   end function character_le_string
 !------ operator(<=) procedures end
 
-  function get_string_value(self) result(string_value)
+  pure function get_string_value(self) result(string_value)
 
     implicit none
     class(string_t), intent(in)   :: self
@@ -516,7 +516,7 @@ contains
 
   end function get_string_value
 
-  function len_string(self) result(length)
+  pure function len_string(self) result(length)
 
     implicit none
     class(string_t), intent(in) :: self
@@ -526,7 +526,7 @@ contains
 
   end function len_string
 
-  function len_trim_string(self) result(length)
+  pure function len_trim_string(self) result(length)
 
     implicit none
     class(string_t), intent(in) :: self
@@ -536,7 +536,7 @@ contains
 
   end function len_trim_string
 
-  function trim_string(self) result(trimmed_string)
+  pure function trim_string(self) result(trimmed_string)
 
     implicit none
     class(string_t), intent(in) :: self
@@ -546,7 +546,7 @@ contains
 
   end function trim_string
 
-  function adjustl_string(self) result(adjusted_string)
+  pure function adjustl_string(self) result(adjusted_string)
 
     implicit none
     class(string_t), intent(in) :: self
@@ -556,7 +556,7 @@ contains
 
   end function adjustl_string
 
-  function adjustr_string(self) result(adjusted_string)
+  pure function adjustr_string(self) result(adjusted_string)
 
     implicit none
     class(string_t), intent(in) :: self
@@ -566,7 +566,7 @@ contains
 
   end function adjustr_string
 
-  function resverse_string(self) result(reversed_string)
+  pure function resverse_string(self) result(reversed_string)
 
     implicit none
     class(string_t), intent(in) :: self
@@ -581,7 +581,7 @@ contains
 
   end function resverse_string
 
-  function to_lower_string(self) result(lower_string)
+  pure function to_lower_string(self) result(lower_string)
 
     implicit none
     class(string_t), intent(in) :: self
@@ -599,7 +599,7 @@ contains
 
   end function to_lower_string
 
-function to_upper_string(self) result(upper_string)
+  pure function to_upper_string(self) result(upper_string)
 
     implicit none
     class(string_t), intent(in) :: self
@@ -617,7 +617,7 @@ function to_upper_string(self) result(upper_string)
 
   end function to_upper_string
 
-  function capitalize(self) result(capitalized_string)
+  pure function capitalize(self) result(capitalized_string)
 
     implicit none
     class(string_t), intent(in) :: self
@@ -632,7 +632,7 @@ function to_upper_string(self) result(upper_string)
 
   end function capitalize
 
-  function colorize(self, color) result(colorized_string)
+  pure function colorize(self, color) result(colorized_string)
 
     implicit none
     class(string_t), intent(in)            :: self
@@ -656,7 +656,7 @@ function to_upper_string(self) result(upper_string)
 
   end function colorize
 
-  function count_substring(self, substring) result(number)
+  pure function count_substring(self, substring) result(number)
 
     implicit none
     class(string_t), intent(in)  :: self
@@ -680,7 +680,7 @@ function to_upper_string(self) result(upper_string)
 
   end function count_substring
 
-  function find(self, substring, back) result(idx)
+  pure function find(self, substring, back) result(idx)
 
     implicit none
     class(string_t), intent(in)   :: self
@@ -696,7 +696,7 @@ function to_upper_string(self) result(upper_string)
 
   end function find
 
-  function start_with(self, prefix, start, end) result(res)
+  pure function start_with(self, prefix, start, end) result(res)
 
     implicit none
     class(string_t), intent(in)   :: self
@@ -722,7 +722,7 @@ function to_upper_string(self) result(upper_string)
 
   end function start_with
 
-  function end_with(self, suffix, start, end) result(res)
+  pure function end_with(self, suffix, start, end) result(res)
 
     implicit none
     class(string_t), intent(in)   :: self
