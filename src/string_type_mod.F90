@@ -1,5 +1,5 @@
 module string_type_mod
-  use iso_fortran_env, only : int8, int16, int32, int64, real32, real64
+  use shr_kind_mod
 
   implicit none
   private
@@ -68,6 +68,7 @@ module string_type_mod
     procedure, public, pass(self)  :: to_lower => to_lower_string
     procedure, public, pass(self)  :: to_upper => to_upper_string
     procedure, public, pass(self)  :: capitalize
+    procedure, public, pass(self)  :: colorize
     procedure, public, pass(self)  :: count    => count_substring
     procedure, public, pass(self)  :: find
     procedure, public, pass(self)  :: start_with
@@ -93,7 +94,7 @@ contains
   function constructor_from_int8(value) result(new)
 
     implicit none
-    integer(int8), intent(in)     :: value
+    integer(i1), intent(in)       :: value
     type(string_t)                :: new
     character(len=range(value)+2) :: buffer
 
@@ -105,7 +106,7 @@ contains
   function constructor_from_int16(value) result(new)
 
     implicit none
-    integer(int16), intent(in)    :: value
+    integer(i2), intent(in)       :: value
     type(string_t)                :: new
     character(len=range(value)+2) :: buffer
 
@@ -117,7 +118,7 @@ contains
   function constructor_from_int32(value) result(new)
 
     implicit none
-    integer(int32), intent(in)    :: value
+    integer(i4), intent(in)       :: value
     type(string_t)                :: new
     character(len=range(value)+2) :: buffer
 
@@ -129,7 +130,7 @@ contains
   function constructor_from_int64(value) result(new)
 
     implicit none
-    integer(int64), intent(in)    :: value
+    integer(i8), intent(in)       :: value
     type(string_t)                :: new
     character(len=range(value)+2) :: buffer
 
@@ -141,7 +142,7 @@ contains
   function constructor_from_real32(value, decimal_width, width) result(new)
 
     implicit none
-    real(real32), intent(in)      :: value
+    real(r4), intent(in)          :: value
     integer, intent(in), optional :: decimal_width
     integer, intent(in), optional :: width
     type(string_t)                :: new
@@ -168,7 +169,7 @@ contains
   function constructor_from_real64(value, decimal_width, width) result(new)
 
     implicit none
-    real(real64), intent(in)      :: value
+    real(r8), intent(in)          :: value
     integer, intent(in), optional :: decimal_width
     integer, intent(in), optional :: width
     type(string_t)                :: new
@@ -630,6 +631,30 @@ function to_upper_string(self) result(upper_string)
     end select
 
   end function capitalize
+
+  function colorize(self, color) result(colorized_string)
+
+    implicit none
+    class(string_t), intent(in)            :: self
+    character(len=*), intent(in), optional :: color
+    type(string_t)                         :: colorized_string
+
+    colorized_string = self
+    if (present(color)) then
+      select case (color)
+      case ('red')
+        colorized_string = char(27) // "[31m" // self // char(27) // "[0m"
+      case ('green')
+        colorized_string = char(27) // "[32m" // self // char(27) // "[0m"
+      case ('yellow')
+        colorized_string = char(27) // "[33m" // self // char(27) // "[0m"
+      case ('blue')
+        colorized_string = char(27) // "[34m" // self // char(27) // "[0m"
+      case default
+      end select
+    end if
+
+  end function colorize
 
   function count_substring(self, substring) result(number)
 

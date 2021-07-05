@@ -1,14 +1,14 @@
 program test_string_type
 
-  use iso_fortran_env, only : int8, int16, int32, int64, real32, real64
+  use shr_kind_mod
   use string_type_mod
   implicit none
 
   type(string_t) :: str1, str2, str3, str4
   character(:), allocatable :: characters
   integer :: i32
-  real(real32) :: r32
-  real(real64) :: r64
+  real(r4) :: r32
+  real(r8) :: r64
 
   print*, '-', str1%value(), '-', str1%len(), str1%len_trim()
   str1 = string_t("123 ")
@@ -16,6 +16,8 @@ program test_string_type
   i32 = 789
   str1 = string_t(i32)
   print*, str1%value(), str1%len(), str1%len_trim()
+  str2 = str1%colorize("blue")
+  print*, str2%value(), str2%len(), str2%len_trim()
   str1 = string_t(.true.)
   print*, str1%value(), str1%len(), str1%len_trim()
   str1 = string_t(0.0123456789, 3)

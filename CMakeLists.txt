@@ -15,6 +15,7 @@ set (CMAKE_Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}")
 include_directories(${CMAKE_BINARY_DIR})
 
 set(sources
+  src/shr_kind_mod.F90
   src/string_type_mod.F90
   test/test_string_type.F90
 )
