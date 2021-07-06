@@ -74,6 +74,7 @@ module string_type_mod
     procedure, public, pass(self)  :: repeat   => repeat_string
     procedure, public, pass(self)  :: scan     => scan_string
     procedure, public, pass(self)  :: verify   => verify_string
+    procedure, public, pass(self)  :: at       => string_at
     procedure, public, pass(self)  :: start_with
     procedure, public, pass(self)  :: end_with
 
@@ -738,6 +739,22 @@ contains
 
   end function verify_string
 
+  pure function string_at(self, start, end) result(sliced_string)
+
+    implicit none
+    class(string_t), intent(in)   :: self
+    integer, intent(in)           :: start
+    integer, intent(in), optional :: end
+    type(string_t)                :: sliced_string
+
+    if (present(end)) then
+      sliced_string = self%value_(start:end)
+    else
+      sliced_string = self%value_(start:start)
+    end if
+
+  end function string_at
+
   pure function start_with(self, prefix, start, end) result(res)
 
     implicit none
@@ -801,9 +818,9 @@ contains
     character(len=*), intent(inout) :: iomsg     !< IO status message.
 
     if (allocated(dtv%value_)) then
-      write(unit, "(A)", iostat=iostat, iomsg=iomsg) dtv%value_
+      write(unit, "(a)", iostat=iostat, iomsg=iomsg) dtv%value_
     else
-      write(unit, "(A)", iostat=iostat, iomsg=iomsg)''
+      write(unit, "(a)", iostat=iostat, iomsg=iomsg) ''
     end if
 
   end subroutine write_formatted
@@ -819,7 +836,7 @@ contains
   if (allocated(dtv%value_)) then
     write(unit, iostat=iostat, iomsg=iomsg) dtv%value_
   else
-    write(unit, iostat=iostat, iomsg=iomsg)''
+    write(unit, iostat=iostat, iomsg=iomsg) ''
   end if
 
   end subroutine write_unformatted

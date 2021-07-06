@@ -14,6 +14,7 @@ program test_string_type
   str1 = string_t("123 ")
   write(*, *) str1%colorize("Red")
   print*, str1%value(), str1%len(), str1%len_trim()
+  print*, str1%at(2, 3)
   i32 = 789
   str1 = string_t(i32)
   print*, str1%value(), str1%len(), str1%len_trim()
