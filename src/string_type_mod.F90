@@ -70,9 +70,17 @@ module string_type_mod
     procedure, public, pass(self)  :: capitalize
     procedure, public, pass(self)  :: colorize
     procedure, public, pass(self)  :: count    => count_substring
-    procedure, public, pass(self)  :: find
+    procedure, public, pass(self)  :: index    => index_string
+    procedure, public, pass(self)  :: repeat   => repeat_string
+    procedure, public, pass(self)  :: scan     => scan_string
+    procedure, public, pass(self)  :: verify   => verify_string
     procedure, public, pass(self)  :: start_with
     procedure, public, pass(self)  :: end_with
+
+    generic, public                :: write(formatted)   => write_formatted
+    procedure, private, pass(dtv)  :: write_formatted
+    generic, public                :: write(unformatted) => write_unformatted
+    procedure, private, pass(dtv)  :: write_unformatted
 
     final                          :: string_finalize
   end type string_t
@@ -638,10 +646,13 @@ contains
     class(string_t), intent(in)            :: self
     character(len=*), intent(in), optional :: color
     type(string_t)                         :: colorized_string
+    type(string_t)                         :: color_string
 
     colorized_string = self
     if (present(color)) then
-      select case (color)
+      color_string = color
+      color_string = color_string%to_lower()
+      select case (color_string%value_)
       case ('red')
         colorized_string = char(27) // "[31m" // self // char(27) // "[0m"
       case ('green')
@@ -680,7 +691,7 @@ contains
 
   end function count_substring
 
-  pure function find(self, substring, back) result(idx)
+  pure function index_string(self, substring, back) result(idx)
 
     implicit none
     class(string_t), intent(in)   :: self
@@ -688,13 +699,44 @@ contains
     logical, intent(in), optional :: back
     integer                       :: idx
 
-    if (len(substring) < self%len()) then
-      idx = index(self%value_, substring, back)
-    else
-      idx = 0
-    end if
+    idx = index(self%value_, substring, back)
 
-  end function find
+  end function index_string
+
+  pure function repeat_string(self, ncopies) result(repeated_string)
+
+    implicit none
+    class(string_t), intent(in) :: self
+    integer, intent(in)         :: ncopies
+    type(string_t)              :: repeated_string
+
+    repeated_string = repeat(self%value_, ncopies)
+
+  end function repeat_string
+
+  pure function scan_string(self, set, back) result(idx)
+
+    implicit none
+    class(string_t), intent(in)   :: self
+    character(len=*), intent(in)  :: set
+    logical, intent(in), optional :: back
+    integer                       :: idx
+
+    idx = scan(self%value_, set, back)
+
+  end function scan_string
+
+  pure function verify_string(self, set, back) result(idx)
+
+    implicit none
+    class(string_t), intent(in)   :: self
+    character(len=*), intent(in)  :: set
+    logical, intent(in), optional :: back
+    integer                       :: idx
+
+    idx = verify(self%value_, set, back)
+
+  end function verify_string
 
   pure function start_with(self, prefix, start, end) result(res)
 
@@ -747,5 +789,39 @@ contains
     res = self%value_(end_-len(suffix)+1:end_) == suffix
 
   end function end_with
+
+  subroutine write_formatted(dtv, unit, iotype, v_list, iostat, iomsg)
+
+    implicit none
+    class(string_t), intent(in)     :: dtv       !< The string.
+    integer, intent(in)             :: unit      !< Logical unit.
+    character(len=*), intent(in)    :: iotype    !< Edit descriptor.
+    integer, intent(in)             :: v_list(:) !< Edit descriptor list.
+    integer, intent(out)            :: iostat    !< IO status code.
+    character(len=*), intent(inout) :: iomsg     !< IO status message.
+
+    if (allocated(dtv%value_)) then
+      write(unit, "(A)", iostat=iostat, iomsg=iomsg) dtv%value_
+    else
+      write(unit, "(A)", iostat=iostat, iomsg=iomsg)''
+    end if
+
+  end subroutine write_formatted
+
+  subroutine write_unformatted(dtv, unit, iostat, iomsg)
+  
+  implicit none
+  class(string_t), intent(in)     :: dtv    !< The string.
+  integer, intent(in)             :: unit   !< Logical unit.
+  integer, intent(out)            :: iostat !< IO status code.
+  character(len=*), intent(inout) :: iomsg  !< IO status message.
+
+  if (allocated(dtv%value_)) then
+    write(unit, iostat=iostat, iomsg=iomsg) dtv%value_
+  else
+    write(unit, iostat=iostat, iomsg=iomsg)''
+  end if
+
+  end subroutine write_unformatted
 
 end module string_type_mod

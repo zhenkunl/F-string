@@ -12,11 +12,12 @@ program test_string_type
 
   print*, '-', str1%value(), '-', str1%len(), str1%len_trim()
   str1 = string_t("123 ")
+  write(*, *) str1%colorize("Red")
   print*, str1%value(), str1%len(), str1%len_trim()
   i32 = 789
   str1 = string_t(i32)
   print*, str1%value(), str1%len(), str1%len_trim()
-  str2 = str1%colorize("blue")
+  str2 = str1%colorize("BLUE")
   print*, str2%value(), str2%len(), str2%len_trim()
   str1 = string_t(.true.)
   print*, str1%value(), str1%len(), str1%len_trim()
@@ -90,7 +91,7 @@ program test_string_type
   print*, str2%value(), str2%len(), str2%len_trim()
   str1 = " 0123456123456 123456123456 "
   print*, str1%count(" "), str1%count("123"), str1%count("61")
-  print*, str1%find("34"), str1%find("56", .true.)
+  print*, str1%index("34"), str1%index("56", .true.)
   str1 = "123log.txt"
   print*, str1%start_with("123"), str1%start_with("og", 5, 15)
   print*, str1%end_with(".txt"), str1%end_with("txt", 11, 20)
