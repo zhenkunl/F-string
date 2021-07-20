@@ -1,7 +1,6 @@
 program test_string_type
 
-  use shr_kind_mod
-  use string_type_mod
+  use string_type, only: string_t
   implicit none
 
   type(string_t) :: str1, str2, str3, str4

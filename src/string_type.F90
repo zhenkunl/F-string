@@ -1,5 +1,5 @@
-module string_type_mod
-  use shr_kind_mod
+module string_type
+  use iso_fortran_env, only : i1 => int8, i2 => int16, i4 => int32, i8 => int64, r4 => real32, r8 => real64
 
   implicit none
   private
@@ -841,4 +841,4 @@ contains
 
   end subroutine write_unformatted
 
-end module string_type_mod
+end module string_type

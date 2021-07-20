@@ -2,7 +2,7 @@ set(dir "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(
   srcs
-  "${dir}/string_type_mod.F90"
+  "${dir}/string_type.F90"
 )
 
 set(
