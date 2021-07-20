@@ -1,5 +1,6 @@
 program test_string_type
 
+  use iso_fortran_env, only : i1 => int8, i2 => int16, i4 => int32, i8 => int64, r4 => real32, r8 => real64
   use string_type, only: string_t
   implicit none
 
