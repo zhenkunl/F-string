@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project("fortran_string" LANGUAGES "Fortran" VERSION "1.0.0")
 
 option(INSTALL_PROJECT "Whether this project should be installed" TRUE)
-option(RUN_TEST "Whether the test executable should be compiled" OFF)
+option(BUILD_TESTS "Whether the test executable should be compiled" OFF)
 
 # Follow GNU conventions for installing directories
 include(GNUInstallDirs)
@@ -60,7 +60,7 @@ if(INSTALL_PROJECT)
 
 endif()
 
-if(RUN_TEST)
+if(BUILD_TESTS)
   add_executable(test_string.exe)
   target_sources(test_string.exe PRIVATE "test/test_string.F90")
   target_link_libraries(test_string.exe PRIVATE ${PROJECT_NAME})
