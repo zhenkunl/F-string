@@ -60,7 +60,7 @@ if(INSTALL_PROJECT)
 
 endif()
 
-if(BUILD_TESTS)
+if(BUILD_TESTS AND PROJECT_IS_TOP_LEVE)
   add_executable(test_string.exe)
   target_sources(test_string.exe PRIVATE "test/test_string.F90")
   target_link_libraries(test_string.exe PRIVATE ${PROJECT_NAME})
