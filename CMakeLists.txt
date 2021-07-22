@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project("Fortran_String" LANGUAGES "Fortran" VERSION "1.0.0")
 
 option(INSTALL_PROJECT "Whether this project should be installed" TRUE)
+option(RUN_TEST "Whether the test executable should be compiled" OFF)
 
 # Follow GNU conventions for installing directories
 include(GNUInstallDirs)
@@ -59,17 +60,8 @@ if(INSTALL_PROJECT)
 
 endif()
 
-set(TEST_STRING_NAME test_string_type.exe)
-set(TEST_STRING_SOURCES test/test_string_type.F90)
-
-set_source_files_properties(${TEST_STRING_SOURCES} PROPERTIES COMPILE_FLAGS "${CMAKE_Fortran_FLAGS}")
-add_executable(${TEST_STRING_NAME} ${TEST_STRING_SOURCES})
-target_link_libraries (${TEST_STRING_NAME} "${PROJECT_NAME}-lib")
-# set_target_properties(
-#     ZOFUDRIVER
-#     PROPERTIES
-#     OUTPUT_NAME zofu-driver
-#     DEPENDS ${ZOFU_LIB_NAME}
-#     Fortran_MODULE_DIRECTORY ${ZOFUDRIVER_FORTRAN_MODULE_DIR}
-#     INCLUDE_DIRECTORIES ${ZOFU_FORTRAN_MODULE_DIR}
-#     LINK_LIBRARIES ${ZOFU_LIB_NAME}
+if(RUN_TEST)
+  add_executable(test_string_type.exe)
+  target_sources(test_string_type.exe PRIVATE "test/test_string_type.F90")
+  target_link_libraries(test_string_type.exe PRIVATE ${PROJECT_NAME})
+endif()
