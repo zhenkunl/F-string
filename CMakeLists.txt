@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project("Fortran_String" LANGUAGES "Fortran" VERSION "1.0.0")
+project("fortran_string" LANGUAGES "Fortran" VERSION "1.0.0")
 
 option(INSTALL_PROJECT "Whether this project should be installed" TRUE)
 option(RUN_TEST "Whether the test executable should be compiled" OFF)
@@ -61,7 +61,7 @@ if(INSTALL_PROJECT)
 endif()
 
 if(RUN_TEST)
-  add_executable(test_string_type.exe)
-  target_sources(test_string_type.exe PRIVATE "test/test_string_type.F90")
-  target_link_libraries(test_string_type.exe PRIVATE ${PROJECT_NAME})
+  add_executable(test_string.exe)
+  target_sources(test_string.exe PRIVATE "test/test_string.F90")
+  target_link_libraries(test_string.exe PRIVATE ${PROJECT_NAME})
 endif()

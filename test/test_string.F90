@@ -1,7 +1,7 @@
-program test_string_type
+program test_string
 
   use iso_fortran_env, only : i1 => int8, i2 => int16, i4 => int32, i8 => int64, r4 => real32, r8 => real64
-  use string_type, only: string_t
+  use string, only: string_t
   implicit none
 
   type(string_t) :: str1, str2, str3, str4
@@ -113,4 +113,4 @@ program test_string_type
   print*, str3 == "789", "789" == str3, str3 /= "789", "789" /= str3
   print*, str3 > "789", "789" > str3, str3 > "788", "788" > str3, str3 >= "789", "789" >= str3
   print*, str3 < "789", "789" < str3, str3 < "790", "790" > str3, str3 <= "789", "789" >= str3
-end program test_string_type
+end program test_string
