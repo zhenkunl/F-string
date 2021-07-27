@@ -1,2 +1,8 @@
-include_directories("${CMAKE_INSTALL_PREFIX}/include")
-link_directories("${CMAKE_INSTALL_PREFIX}/lib")
+@PACKAGE_INIT@
+
+set_and_check(fortran_string_INSTALL_PREFIX "@PACKAGE_CMAKE_INSTALL_PREFIX@")
+set_and_check(fortran_string_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+set_and_check(fortran_string_LIB_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
+include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
+set(fortran_string_LIBRARIES "@PROJECT_NAME@")
+check_required_components("@PROJECT_NAME@")

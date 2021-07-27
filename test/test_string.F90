@@ -15,7 +15,7 @@ program test_string
   call test%assert_equal(str1%value(), 'abc', __FILE__, __LINE__)
   call test%assert_equal(str1%len(), 4, __FILE__, __LINE__)
   call test%assert_equal(str1%len_trim(), 3, __FILE__, __LINE__)
-  str1 = string_t('123')
+  str1 = string_t(123)
   call test%assert_equal(str1%value(), '123', __FILE__, __LINE__)
   call test%assert_equal(str1%len(), 3, __FILE__, __LINE__)
   str1 = string_t(.true.)

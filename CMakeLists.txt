@@ -60,29 +60,33 @@ if(INSTALL_PROJECT)
 
   include(CMakePackageConfigHelpers)
 # generate the config file that is includes the exports
-  configure_file(cmake/${PROJECT_NAME}-config.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
+  configure_package_config_file(cmake/${PROJECT_NAME}-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+    PATH_VARS
+    CMAKE_INSTALL_PREFIX
+    CMAKE_INSTALL_INCLUDEDIR
+    CMAKE_INSTALL_LIBDIR
   )
 
 # generate the version file for the config file
   write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-configversion.cmake"
-    VERSION ${VERSION}
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
+    VERSION ${PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
   )
 
 # install the configuration file
   install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-configversion.cmake"
-    DESTINATION lib/cmake/${PROJECT_NAME}
-    )
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+  )
 
 endif()
 
 if(BUILD_TESTING AND PROJECT_IS_TOP_LEVEL)
-  find_package(fortran_unittest)
+  find_package(fortran_unittest REQUIRED NO_MODULE)
   add_executable(test_string.exe)
   target_sources(test_string.exe PRIVATE "test/test_string.F90")
-  target_link_libraries(test_string.exe PRIVATE ${PROJECT_NAME} fortran_unittest)
+  target_link_libraries(test_string.exe PRIVATE ${PROJECT_NAME} fortran_unittest::fortran_unittest)
 endif()
